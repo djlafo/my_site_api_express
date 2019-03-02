@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const db = require('../../db');
-// not sure why auth is making me specify index
-const auth = require('../../auth/index');
+const auth = require('../../auth');
 
 router.post('/', auth.required, (req, res, next) => {
     return res.json({success: true});
