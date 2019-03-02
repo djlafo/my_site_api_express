@@ -14,21 +14,21 @@ sequelize.authenticate()
         console.error('[FAILED] Database Connection: ', err);
     });
 
-const expressSession = require('express-session');
-const sessionStore = require('express-session-sequelize')(expressSession.Store);
-const session = expressSession({
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    secret: inProd ? process.env.COOKIE_SECRET : 'test secret',
-    cookie: {
-        maxAge: 600000,
-        secure: inProd
-    },
-    store: new sessionStore({db: sequelize})
-});
+// const expressSession = require('express-session');
+// const sessionStore = require('express-session-sequelize')(expressSession.Store);
+// const session = expressSession({
+//     resave: false,
+//     saveUninitialized: false,
+//     rolling: true,
+//     secret: inProd ? process.env.COOKIE_SECRET : 'test secret',
+//     cookie: {
+//         maxAge: 600000,
+//         secure: inProd
+//     },
+//     store: new sessionStore({db: sequelize})
+// });
 
 module.exports = {
-    sequelize: sequelize,
-    session: session
+    Sequelize: Sequelize,
+    sequelize: sequelize
 };

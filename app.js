@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
 const inProd = process.env.NODE_ENV === 'production';
 
 const db = require('./db');
 
-app.use(db.session);
+// app.use(db.session);
+require('./auth/passport');
 
 app.get('/', (req, res) => {
     db.sequelize.query('SELECT NOW()', {type: db.sequelize.QueryTypes.SELECT})

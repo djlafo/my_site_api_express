@@ -1,11 +1,10 @@
 const router = require('express').Router();
 const db = require('../../db');
+// not sure why auth is making me specify index
+const auth = require('../../auth/index');
 
-router.get('/', (req, res) => {
-    db.sequelize.query('SELECT NOW()', {type: db.sequelize.QueryTypes.select})
-        .then(dbres => {
-            res.send(dbres[0][0].now);
-        });
+router.post('/', auth.required, (req, res, next) => {
+    return res.json({success: true});
 });
 
 module.exports = router;
