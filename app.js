@@ -3,33 +3,44 @@ const app = express();
 
 const inProd = process.env.NODE_ENV === 'production';
 
-const { Pool } = require('pg');
-const pool = new Pool({
-    database: 'MyDatabase',
-    host: 'localhost',
-    port: 5432,
-    user: 'my_site_user',
-    password: '12345'
-});
+const db = require('./db');
 
-const session = require('express-session');
-const pgSession = require('connect-pg-simple')(session);
-app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    secret: inProd ? process.env.COOKIE_SECRET : 'test secret',
-    cookie: {
-        maxAge: 600000,
-        secure: inProd
-    },
-    store: new pgSession({pool: pool})
-}));
+app.use(db.session);
 
 app.get('/', (req, res) => {
-    pool.query('SELECT NOW()', (err, dbres) => {
-        res.send(dbres);
+    db.sequelize.query('SELECT NOW()', {type: db.sequelize.QueryTypes.SELECT})
+        .then(dbres => {
+            res.send(dbres);
+        });
+});
+
+app.use(require('./routes'));
+
+app.use((req, res, next) => {
+    let err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+});  
+
+if (!inProd) {
+    app.use((err, req, res, next) => {
+        console.log(err.stack);
+    
+        res.status(err.status || 500);
+    
+        res.json({'errors': {
+            message: err.message,
+            error: err
+        }});
     });
+}
+
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.json({'errors': {
+        message: err.message,
+        error: {}
+    }});
 });
 
 const port = 3001;
