@@ -4,6 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 
+const inProd = process.env.NODE_ENV === 'production';
+
 const db = require('./db');
 db.sequelize.authenticate().then(function() {
     console.log('[SUCCESS] Database Connection');
@@ -33,7 +35,7 @@ db.sequelize.authenticate().then(function() {
         next(err);
     });  
 
-    if (require('./config').env !== 'PROD') {
+    if (!inProd) {
         app.use((err, req, res, next) => {
             console.log(err.stack);
         

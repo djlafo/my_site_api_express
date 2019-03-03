@@ -5,16 +5,6 @@ phases:
   install:
     commands:
       - "npm install"
-  pre_build:
-    commands:
-      - sed -i "s|DEV|PROD|g" config/index.js
-      - sed -i "s|TOKEN_SECRET_VAR|$JWT_SECRET|g" config/index.js
-      - sed -i "s|DB_VAR|$DB|g" config/index.js
-      - sed -i "s|DBUSER_VAR|$DBUSER|g" config/index.js
-      - sed -i "s|DBPASS_VAR|$DBPASS|g" config/index.js
-      - sed -i "s|DBHOST_VAR|$DBHOST|g" config/index.js
-      - sed -i "s|DBPORT_VAR|$DBPORT|g" config/index.js
-
 
 artifacts:
   files:

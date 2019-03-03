@@ -1,12 +1,13 @@
+const inProd = process.env.NODE_ENV === 'production';
+
 module.exports = {
-    env: 'DEV',
-    jwtSecret: 'TOKEN_SECRET_VAR',
+    jwtSecret: inProd ? process.env.JWT_SECRET : 'test token lol',
     production: {
-        database: "DB_VAR",
-        username: "DBUSER_VAR",
-        password: "DBPASS_VAR",
-        host: "DBHOST_VAR",
-        port: "DBPORT_VAR",
+        database: process.env.DB,
+        username: process.env.DBUSER,
+        password: process.env.DBPASS,
+        host: process.env.DBHOST,
+        port: process.env.DBPORT || 5432,
         dialect: 'postgres'
     },
     development: {
