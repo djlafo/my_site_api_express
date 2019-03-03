@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+
+files:
+   - source: /
+     destination: /home/ec2-user/api
+
+hooks:
+  ApplicationStart:
+    - location: npm-start.sh
+      runas: root
+      timeout: 60

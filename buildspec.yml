@@ -1,0 +1,14 @@
+
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - "npm install"
+  migrations:
+    commands:
+      - "./node_modules/.bin/sequelize db:migrate"
+
+artifacts:
+  files:
+    - */*
