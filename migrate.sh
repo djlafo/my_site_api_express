@@ -1,4 +1,5 @@
 cd /home/ec2-user/api
+source /etc/environment
 echo CONFIG:
 echo ENV: $NODE_ENV
 echo HOST: $DBHOST
