@@ -8,7 +8,7 @@ const Posts = db.sequelize.define('Posts', {
 
 Posts.user = Posts.belongsTo(db.sequelize.models.Users, {foreignKey: 'user'});
 
-Posts.prototype.serialize = async function() {
+Posts.prototype.serialize = function() {
   return this.getUser().then(user => {
     return {
       id: this.id,
