@@ -14,3 +14,7 @@ hooks:
     - location: start.sh
       timeout: 60
       runas: root
+  ApplicationStop:
+    - location: stop.sh
+      timeout: 60
+      runas: root
