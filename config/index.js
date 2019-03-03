@@ -1,7 +1,6 @@
-const inProd = process.env.NODE_ENV === 'production';
-
 module.exports = {
-    jwtSecret: inProd ? process.env.JWT_SECRET : 'test token lol',
+    env: 'DEV',
+    jwtSecret: 'TOKEN_SECRET_VAR',
     production: {
         database: "DB_VAR",
         username: "DBUSER_VAR",
