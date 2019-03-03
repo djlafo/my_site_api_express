@@ -6,4 +6,4 @@ echo HOST: $DBHOST
 echo DATABASE: $DB
 echo USER: $DBUSER
 echo -------------------
-./node_modules/sequelize-cli/lib/sequelize db:migrate --env=production
+./node_modules/sequelize-cli/lib/sequelize db:migrate --env=production --url "User ID=$DBUSER;Password=$DBPASS;Host=$DBHOST;Port=$DBPORT;Database=$DB"
