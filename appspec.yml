@@ -11,6 +11,6 @@ hooks:
       timeline: 300
       runas: root
   ApplicationStart:
-    - location: npm-start.sh
+    - location: start.sh
       timeout: 60
       runas: root

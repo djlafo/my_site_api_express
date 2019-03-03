@@ -9,18 +9,19 @@ const Posts = db.sequelize.define('Posts', {
 Posts.user = Posts.belongsTo(db.sequelize.models.Users, {foreignKey: 'user'});
 
 Posts.prototype.serialize = async function() {
-  const user = await this.getUser();
-  return {
-    id: this.id,
-    title: this.title,
-    body: this.body,
-    user: {
-      displayName: user.displayName,
-      role: user.role,
-      username: user.username
-    },
-    date: this.createdAt
-  };
+  return this.getUser().then(user => {
+    return {
+      id: this.id,
+      title: this.title,
+      body: this.body,
+      user: {
+        displayName: user.displayName,
+        role: user.role,
+        username: user.username
+      },
+      date: this.createdAt
+    };
+  });
 };
 
 Posts.serializePosts = (posts) => {

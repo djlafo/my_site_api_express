@@ -6,4 +6,4 @@ echo HOST: $DBHOST
 echo DATABASE: $DB
 echo USER: $DBUSER
 echo -------------------
-sudo -u ec2-user ./node_modules/sequelize-cli/lib/sequelize db:migrate --env=production
+sudo -u ec2-user ./node_modules/sequelize-cli/lib/sequelize db:migrate

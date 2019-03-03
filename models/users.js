@@ -36,13 +36,14 @@ Users.prototype.generateJWT = function() {
     exp: parseInt(exp.getTime() / 1000),
   }, secret);
 }
-Users.prototype.serialize = async function() {
-  const role = await this.getRole();
-  return {
-    username: this.username,
-    displayName: this.displayName,
-    role: role.name
-  }
+Users.prototype.serialize = function() {
+  return this.getRole().then(role => {
+    return {
+      username: this.username,
+      displayName: this.displayName,
+      role: role.name
+    }
+  });
 }
 
 module.exports = Users;
