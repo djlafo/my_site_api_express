@@ -1,3 +1,3 @@
 cd /home/ec2-user/api
 source /etc/environment
-forever start app.js
+sudo -u forever start app.js
