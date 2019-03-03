@@ -15,6 +15,7 @@ db.sequelize.authenticate().then(function() {
 
     const cors = require('cors');
     app.use(cors());
+    app.options('*', cors());
   
 
     app.get('/', (req, res) => {
