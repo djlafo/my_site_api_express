@@ -1,5 +1,6 @@
 cd /home/ec2-user/api
 echo CONFIG:
+echo ENV: $NODE_ENV
 echo HOST: $DBHOST
 echo DATABASE: $DB
 echo USER: $DBUSER
