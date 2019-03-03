@@ -9,6 +9,8 @@ hooks:
   AfterInstall:
     - location: migrate.sh
       timeline: 300
+      runas: root
   ApplicationStart:
     - location: npm-start.sh
       timeout: 60
+      runas: root
