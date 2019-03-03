@@ -6,11 +6,9 @@ files:
      destination: /home/ec2-user/api
 
 hooks:
-  BeforeInstall:
+  AfterInstall:
     - location: migrate.sh
-      runas: root
       timeline: 300
   ApplicationStart:
     - location: npm-start.sh
-      runas: root
       timeout: 60
