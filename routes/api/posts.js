@@ -4,6 +4,10 @@ const db = require('../../db');
 
 router.get('/', (req, res, next) => {
     db.sequelize.models.Posts.findAll({
+        order: [
+            ['createdAt', 'DESC']
+        ],
+        limit: 15,
         include:[{
             model: db.sequelize.models.Users,
             required: true,
