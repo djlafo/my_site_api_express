@@ -18,6 +18,18 @@ router.get('/', (req, res, next) => {
     });
 });
 
+router.get('/:id', (req, res, next) => {
+    db.sequelize.models.Posts.find({
+        where: {
+            id: Number(req.params.id)
+        }
+    }).then(val => {
+        val.serialize().then(serialized => {
+            res.send(serialized);
+        });
+    });
+});
+
 router.post('/', auth.required, (req, res, next) => {
     if(!req.body.post || !req.body.post.title || !req.body.post.body) {
         return res.status(422).json({errors: {message: 'title or body is invalid'}});
