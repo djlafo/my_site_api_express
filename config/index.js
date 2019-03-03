@@ -3,11 +3,11 @@ const inProd = process.env.NODE_ENV === 'production';
 module.exports = {
     jwtSecret: inProd ? process.env.JWT_SECRET : 'test token lol',
     production: {
-        database: process.env.DB,
-        username: process.env.DBUSER,
-        password: process.env.DBPASS,
-        host: process.env.DBHOST,
-        port: process.env.DBPORT || 5432,
+        database: "DB_VAR",
+        username: "DBUSER_VAR",
+        password: "DBPASS_VAR",
+        host: "DBHOST_VAR",
+        port: "DBPORT_VAR",
         dialect: 'postgres'
     },
     development: {
