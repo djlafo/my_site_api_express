@@ -5,10 +5,10 @@ phases:
   install:
     commands:
       - "npm install"
-  migrations:
+  pre_build:
     commands:
       - "./node_modules/.bin/sequelize db:migrate"
 
-artifacts:
-  files:
-    - *
+# artifacts:
+#   files:
+#     - *
