@@ -26,11 +26,17 @@ router.get('/:id', (req, res, next) => {
     db.sequelize.models.Posts.find({
         where: {
             id: Number(req.params.id)
-        }
+        },
+        include:[{
+            model: db.sequelize.models.Users,
+            required: true,
+            include: [{
+                model: db.sequelize.models.Roles,
+                required: true
+            }]
+        }]
     }).then(val => {
-        val.serialize().then(serialized => {
-            res.send(serialized);
-        });
+        res.send(val.serialize());
     });
 });
 
@@ -43,9 +49,7 @@ router.post('/', auth.required, (req, res, next) => {
         body: req.body.post.body,
         user: req.user.id
     }).then(post => {
-        return post.serialize().then(serialized => {
-            return res.json(serialized);
-        });
+        return res.json(post.serialize());
     });
 });
 
