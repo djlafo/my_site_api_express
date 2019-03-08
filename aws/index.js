@@ -1,19 +1,21 @@
 const AWS = require('aws-sdk');
 let options = {region: 'us-east-2'};
+options.Bucket = 'personal-api';
+
+const inProd = process.env.NODE_ENV === 'production';
 if(inProd) {
     options.accessKeyId = process.env.ACCESS_KEY_ID;
     options.secretAccessKey = process.env.SECRET_ACCESS_KEY;
 }
-const config = new AWS.config(options);
 const S3 = new AWS.S3({
-    params: {
-        Bucket: 'personal-api'
-    }
+    params: options
 });
 
-const listFiles = function({ delimiter }, callback) {
+const listFiles = function({ delimiter, MaxKeys, Prefix }, callback) {
     S3.listObjects({
-
+        Delimiter: delimiter,
+        Prefix: Prefix,
+        MaxKeys: MaxKeys
     }, callback);
 };
 

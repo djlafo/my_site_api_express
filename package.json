@@ -9,6 +9,7 @@
   "author": "Dylan Lafont",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.417.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

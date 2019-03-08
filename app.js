@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 const fileUpload = require('express-fileupload');
-app.use(fileUpload);
+app.use(fileUpload());
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
