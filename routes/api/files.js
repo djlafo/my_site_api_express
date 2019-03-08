@@ -32,7 +32,7 @@ router.get('/:file', auth.optional, (req, res, next) => {
 });
 
 router.post('/delete', auth.required, (req, res, next) => {
-    const fileName = req.params.file;
+    const fileName = req.body.file;
     s3.deleteFile({ remoteName: fileName }, (err, data) => {
         if(err) {
             res.status(422).json({errors: {message: err.message}});

@@ -27,9 +27,19 @@ const getFile = function({ fileName, expires = 10}) {
 };
 
 const uploadFile = function({ fileStream, remoteName }, callback) {
+    let ContentType = '';
+    if(['.png', '.jpg', 'jpeg', '.bmp', '.gif'].some(imageFormat => {
+        return remoteName.endsWith(imageFormat);
+    })) {
+        ContentType = 'image/png';
+    } else if (remoteName.endsWith('pdf')) {
+        ContentType = "application/pdf";
+    }
     S3.upload({
         Body: fileStream,
-        Key: remoteName
+        Key: remoteName,
+        ContentDisposition: 'inline',
+        ContentType: ContentType
     }, callback);
 };
 
