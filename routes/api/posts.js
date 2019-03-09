@@ -52,7 +52,11 @@ router.post('/delete', auth.required, (req, res, next) => {
 
 router.get('/:id', (req, res, next) => {
     db.sequelize.models.Posts.getFullPost(req.params.id).then(val => {
-        res.send(db.sequelize.models.Posts.serialize(val));
+        if(val) {
+            res.send(db.sequelize.models.Posts.serialize(val));
+        } else {
+            res.status(404).json({errors: {message: 'Not found'}});
+        }
     });
 });
 
