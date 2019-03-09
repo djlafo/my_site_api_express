@@ -61,7 +61,7 @@ router.get('/:id', (req, res, next) => {
 });
 
 
-router.post('/:id', (req, res, next) => {
+router.post('/:id', auth.required, (req, res, next) => {
     if(!req.body.body || !req.body.title) {
         return res.status(422).json({errors: {message: 'Missing body or title'}});
     }
