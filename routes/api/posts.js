@@ -22,12 +22,6 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
-    db.sequelize.models.Posts.getFullPost(req.params.id).then(val => {
-        res.send(db.sequelize.models.Posts.serialize(val));
-    });
-});
-
 router.post('/', auth.required, (req, res, next) => {
     if(!req.body.post || !req.body.post.title || !req.body.post.body) {
         return res.status(422).json({errors: {message: 'title or body is invalid'}});
@@ -53,6 +47,32 @@ router.post('/delete', auth.required, (req, res, next) => {
         }
     }).then(() => {
         return res.status(290).json({success: true});
+    });
+});
+
+router.get('/:id', (req, res, next) => {
+    db.sequelize.models.Posts.getFullPost(req.params.id).then(val => {
+        res.send(db.sequelize.models.Posts.serialize(val));
+    });
+});
+
+
+router.post('/:id', (req, res, next) => {
+    if(!req.body.body || !req.body.title) {
+        return res.status(422).json({errors: {message: 'Missing body or title'}});
+    }
+    db.sequelize.models.Posts.update(
+        {
+            body: req.body.body,
+            title: req.body.title
+        },
+        {
+            where: {
+                id: req.params.id
+            }
+        }
+    ).then(() => {
+        return res.status(200).json({success: true});
     });
 });
 

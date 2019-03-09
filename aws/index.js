@@ -2,11 +2,6 @@ const AWS = require('aws-sdk');
 let options = {region: 'us-east-2'};
 options.Bucket = 'personal-api';
 
-const inProd = process.env.NODE_ENV === 'production';
-if(inProd) {
-    options.accessKeyId = process.env.ACCESS_KEY_ID;
-    options.secretAccessKey = process.env.SECRET_ACCESS_KEY;
-}
 const S3 = new AWS.S3({
     params: options
 });
