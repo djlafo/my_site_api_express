@@ -5,6 +5,8 @@ router.use('/posts', require('./posts'));
 router.use('/users', require('./users'));
 router.use('/files', require('./files'));
 
-router.get('/auth', auth.required, () => {});
+router.get('/auth', auth.required, (err, res, next) => {
+    res.json({status: 'authenticated'});
+});
 
 module.exports = router;
