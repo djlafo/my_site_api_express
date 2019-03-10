@@ -3,10 +3,16 @@ const auth = require('../auth');
 const WebSocket = require('ws');
 let WSS = null;
 let users = [];
-let admins = [];
+let idCounter = 1;
 
 router.ws('/', (ws, req) => {
     send(ws, {type: 'info', msg: 'Welcome to my website'});
+    users.push({
+        id: idCounter,
+        client: ws,
+        ip: req.connection.remoteAddress
+    });
+    idCounter++;
     broadcastClientList();
     ws.on('message', (data) => {
         const toJson = JSON.parse(data);
@@ -14,23 +20,17 @@ router.ws('/', (ws, req) => {
             case 'auth':
                 const verify = auth.verify(toJson.token);
                 if(verify) {
-                    if(verify.role === 'Admin') {
-                        admins.push({
-                            client: ws,
-                            username: verify.username
-                        });
-                    } else {
-                        users.push({
-                            client: ws,
-                            username: verify.username
-                        });
+                    const user = findUser(ws);
+                    if(user) {
+                        user.username = verify.username;
+                        user.admin = verify.role === 'Admin';
+                        broadcastClientList();
                     }
-                    broadcastClientList();
                 }
             break;
             case 'client_message':
                 send(getTargetWs(toJson.target), {
-                    sender: getSenderId(ws),
+                    sender: findUser(ws).id,
                     msg: toJson.msg,
                     type: 'client_message'
                 });
@@ -60,43 +60,25 @@ router.ws('/', (ws, req) => {
     });
 });
 
-function getSenderId(ws) {
-    const adminSearch = admins.find(admin => ws === admin.client);
-    if(adminSearch) return adminSearch.username;
-    const userSearch = users.find(user => ws === user.client);
-    if(userSearch) return userSearch.username;
-
-    let i = 0;
-    let found;
-    WSS.clients.forEach(client => {
-        if(client === ws) {
-            found = i;
-            return;
-        }
-        i++;
+function findUser(ws) {
+    return users.find(user => {
+        return user.client === ws;
     });
-    if(found) return found;
 }
 
 function getTargetWs(id) {
-    const adminSearch = admins.find(admin => id === admin.username);
-    if(adminSearch) return adminSearch.client;
-    const userSearch = users.find(user => id === user.username);
-    if(userSearch) return userSearch.client;
-
-    return Array.from(WSS.clients)[parseInt(id, 10)];
+    const foundUser = users.find(user => {
+        return user.id === Number(id);
+    });
+    if(foundUser) return foundUser.client;
 }
 
 function deauth(ws) {
-    let ind = admins.findIndex(admin => admin.client === ws);
-    if(~ind) {
-        admins.splice(ind, 1);
-    }
-    ind = users.findIndex(user => user.client === ws);
+    let ind = users.findIndex(user => user.client === ws);
     if(~ind) {
         users.splice(ind, 1);
+        broadcastClientList();
     }
-    broadcastClientList({});
 }
 
 function send(ws, json) {
@@ -106,22 +88,11 @@ function send(ws, json) {
 }
 
 function broadcast(json, { adminsOnly, unauthOnly }) {
-    if(adminsOnly) {
-        admins.forEach(admin => {
-            send(admin.client, json);
-        });
-    } else if (unauthOnly) {
-        WSS.clients.forEach(client => {
-            const admin = admins.find(admin => admin.client === client);
-            if(!admin) {
-                send(client, json);
-            }
-        });
-    } else {
-        WSS.clients.forEach(client => {
-            send(client, json);
-        });
-    }
+    users.forEach(user => {
+        if(adminsOnly && user.admin || unauthOnly && !user.admin || (!adminsOnly && !unauthOnly)) {
+            send(user.client, json);
+        }
+    });
 }
 
 // function sendClientList(ws) {
@@ -134,32 +105,18 @@ function broadcastClientList() {
 }
 
 function getClientList({ admin = false}) {
-    if(admin) {
-        let clients = [];
-        let i = 0;
-        WSS.clients.forEach(client => {
-            const admin = admins.find(admin=> {
-                return admin.client === client;
-            });
-            const user = users.find(user=> {
-                return user.client === client;
-            });
+    let clients = [];
+    users.forEach(user => {
+        if(!user.admin && admin || user.admin) {
             clients.push({
-                id: i,
-                ip: client._socket.remoteAddress,
-                username: (admin && admin.username || user && user.username),
-                admin: (!!admin)
+                id: user.id,
+                username: user.username,
+                ip: admin && user.ip,
+                admin: (!!user.admin)
             });
-            i++;
-        });
-        return clients;
-    } else {
-        return admins.map(admin => {
-            return {
-                username: admin.username
-            };
-        });
-    }
+        }
+    });
+    return clients;
 }
 
 module.exports = (ws) => {
