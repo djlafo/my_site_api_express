@@ -51,12 +51,31 @@ router.ws('/', (ws, req) => {
                     case 'broadcast':
                         broadcast({type: 'info', msg: toJson.msg});
                     break;
+                    case 'redirect':
+                        send(getTargetWs(toJson.client), {
+                            type: 'redirect',
+                            target: toJson.target
+                        });
+                    break;
+                    case 'apply_class':
+                        send(getTargetWs(toJson.client), {
+                            type: 'apply_class',
+                            class: toJson.class,
+                            apply: toJson.apply
+                        });
+                    break;
+                    case 'alert':
+                        send(getTargetWs(toJson.client), {
+                            type: 'alert',
+                            msg: toJson.msg
+                        });
+                    break;
                 }
             }
         }
     });
     ws.on('close', () => {
-        deauth(ws);
+        remove(ws);
     });
 });
 
@@ -73,12 +92,21 @@ function getTargetWs(id) {
     if(foundUser) return foundUser.client;
 }
 
-function deauth(ws) {
+function remove(ws) {
     let ind = users.findIndex(user => user.client === ws);
     if(~ind) {
         users.splice(ind, 1);
         broadcastClientList();
     }
+}
+
+function deauth(ws) {
+    let user = users.find(user => user.client === ws);
+    if(user) {
+        user.username = null;
+        user.admin = false;
+    }
+    broadcastClientList();
 }
 
 function send(ws, json) {
@@ -100,8 +128,15 @@ function broadcast(json, { adminsOnly, unauthOnly }) {
 // }
 
 function broadcastClientList() {
-    broadcast({type: 'client_list', msg: getClientList({ admin: true })}, {adminsOnly: true});
-    broadcast({type: 'client_list', msg: getClientList({})}, {unauthOnly: true});
+    let adminList = getClientList({ admin: true });
+    let otherList = getClientList({});
+    users.forEach(user => {
+        let targetList = !!user.admin ? adminList : otherList;
+        targetList = targetList.filter(t => {
+            return t.id !== user.id;
+        });
+        send(user.client, {type: 'client_list', msg: targetList});
+    });
 }
 
 function getClientList({ admin = false}) {
