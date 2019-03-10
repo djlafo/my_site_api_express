@@ -1,5 +1,7 @@
+
 const express = require('express');
 const app = express();
+const websocket = require('express-ws')(app);
 
 const fileUpload = require('express-fileupload');
 app.use(fileUpload());
@@ -29,6 +31,7 @@ db.sequelize.authenticate().then(function() {
     });
 
     app.use(require('./routes'));
+    app.use(require('./ws')(websocket.getWss()).router);
 
     app.use((req, res, next) => {
         let err = new Error('Not Found');

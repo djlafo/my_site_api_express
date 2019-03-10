@@ -30,11 +30,14 @@ Users.prototype.generateJWT = function() {
   let exp = new Date();
   exp.setDate(new Date().getDate() + 60);
 
-  return jwt.sign({
-    id: this.id,
-    username: this.username,
-    exp: parseInt(exp.getTime() / 1000),
-  }, secret);
+  return this.getRole().then(role => {
+    return jwt.sign({
+      id: this.id,
+      username: this.username,
+      role: role.name,
+      exp: parseInt(exp.getTime() / 1000),
+    }, secret);
+  });
 }
 Users.prototype.serialize = function() {
   return this.getRole().then(role => {

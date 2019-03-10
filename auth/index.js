@@ -1,4 +1,5 @@
 const jwt = require('express-jwt');
+const JWT = require('jsonwebtoken');
 const secret = require('../config').jwtSecret;
 
 const getTokenFromHeader = function(req){
@@ -19,7 +20,14 @@ const auth = {
     secret: secret,
     credentialsRequired: false,
     getToken: getTokenFromHeader
-  })
+  }),
+  verify: function(token) {
+    try {
+      return JWT.verify(token,secret);;
+    } catch(err) {
+      return false;
+    }
+  }
 };
 
 module.exports = auth;
