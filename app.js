@@ -31,7 +31,8 @@ db.sequelize.authenticate().then(function() {
     });
 
     app.use(require('./routes'));
-    app.use(require('./ws')(websocket.getWss()).router);
+    const ws = require('./ws')(websocket.getWss())
+    app.use(ws.router);
 
     app.use((req, res, next) => {
         let err = new Error('Not Found');
@@ -41,7 +42,9 @@ db.sequelize.authenticate().then(function() {
 
     if (!inProd) {
         app.use((err, req, res, next) => {
-            console.log(err.stack);
+            if(err.name !== 'UnauthorizedError') {
+                console.log(err.stack);
+            }
         
             res.status(err.status || 500);
         

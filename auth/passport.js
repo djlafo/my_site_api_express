@@ -6,7 +6,7 @@ passport.use(new LocalStrategy({
   usernameField: 'user[username]',
   passwordField: 'user[password]'
 }, function(username, password, done) {
-  Users.findOne({username: username}).then(function(user){
+  Users.findOne({where: {username: username}}).then(function(user){
     if(!user || !user.isCorrectPassword(password)){
       return done(null, false, {errors: {'email or password': 'is invalid'}});
     }

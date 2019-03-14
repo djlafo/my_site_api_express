@@ -6,7 +6,8 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
     host: dbConfig.host,
     port: dbConfig.port,
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: inProd
 });
 
 module.exports = {
