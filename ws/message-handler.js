@@ -21,15 +21,21 @@ class MessageHandler {
         switch(args.type) {
             case 'auth':
                 if(client && client.authenticate(args.token)) {
+                    client.send({
+                        type: 'auth'
+                    });
                     clients.broadcastList();
                 }
             break;
             case 'client_message':
-                clients.find({id: args.target}).send({
-                    sender: client.id,
-                    msg: args.msg,
-                    type: 'client_message'
-                });
+                const otherClient = clients.find({id: args.target});
+                if(otherClient) {
+                    otherClient.send({
+                        sender: client.id,
+                        msg: args.msg,
+                        type: 'client_message'
+                    });
+                }
             break;
         }
     }
