@@ -1,2 +1,4 @@
 node_modules/*
 .vscode/*
+forever_error.log
+forever_out.log

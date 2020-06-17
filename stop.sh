@@ -1,3 +1,3 @@
-cd /home/ec2-user/api
+cd /home/ubuntu/my_site_api_express
 source /etc/environment
-sudo -u ec2-user forever stopall
+sudo forever stop app.js
