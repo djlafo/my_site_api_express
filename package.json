@@ -15,7 +15,7 @@
     "crypto": "^1.0.1",
     "express": "^4.16.4",
     "express-fileupload": "^1.1.2-alpha.1",
-    "express-jwt": "^5.3.1",
+    "express-jwt": "^6.0.0",
     "express-ws": "^4.0.0",
     "forever": "^0.15.3",
     "jsonwebtoken": "^8.5.0",
