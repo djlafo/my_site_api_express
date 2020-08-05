@@ -14,7 +14,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.16.4",
-    "express-fileupload": "^1.1.2-alpha.1",
+    "express-fileupload": "^1.1.9",
     "express-jwt": "^5.3.1",
     "express-ws": "^4.0.0",
     "forever": "^0.15.3",
